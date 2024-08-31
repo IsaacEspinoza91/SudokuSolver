@@ -45,12 +45,9 @@ verificarUnicoNum([X|COLA],N,Existe):- X\=N, verificarUnicoNum(COLA,N,Existe).
 
 
 
-%sumar elementos lista
-sum([],0):-!.
-sum([X|Y],R):-sum(Y,R1),R is R1+X.
+verticalCompleto(C1,C2,C3,C4,C5,C6,C7,C8,C9):-horizontalCompleto([C1,C2,C3,C4,C5,C6,C7,C8,C9]).
 
-su(LISTA,RESUL):-su(LISTA,0,RESUL).
-su([],AC,AC).
-su([X|Y],ACUM,R):-AC1 is ACUM+X,su(Y,AC1,R) .
-
-
+todoVerticalCompleto([[],[],[],[],[],[],[],[],[]]).
+todoVerticalCompleto([[C1|COLA1],[C2|COLA2],[C3|COLA3],[C4|COLA4],[C5|COLA5],[C6|COLA6],[C7|COLA7],[C8|COLA8],[C9|COLA9]]):-
+    horizontalCompleto([C1,C2,C3,C4,C5,C6,C7,C8,C9]),
+    todoVerticalCompleto([COLA1,COLA2,COLA3,COLA4,COLA5,COLA6,COLA7,COLA8,COLA9]).
