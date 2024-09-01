@@ -1,0 +1,10 @@
+resolver([
+    [9, 2, 6, 3, 4, Q, 7, W, 1],
+    [E, 5, R, T, 2, 6, 4, Y, 9],
+    [U, 7, I, 8, O, 1, P, A, S],
+    [D, F, G, 9, H, J, 2, K, 7],
+    [3, 4, 2, L, Z, X, C, V, 5],
+    [1, B, N, M, QQ,WW,8,EE,RR],
+    [6, 8, 5, 4,TT,YY,UU, 1, 2],
+    [II,OO,4,PP,AA, 2, 9,SS,DD],
+    [FF,1,GG,5, 3, 8,HH, 7, JJ]],RESULTADO).

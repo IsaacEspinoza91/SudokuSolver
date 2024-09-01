@@ -66,3 +66,26 @@ todoVerticalCompleto([[C1|COLA1],[C2|COLA2],[C3|COLA3],[C4|COLA4],[C5|COLA5],[C6
 DOM: estructura Sudoku (Lista X Lista)
 REC: bool */
 sudokuResuelto(SUDO):-todoHorizontalCompleto(SUDO),todoVerticalCompleto(SUDO).
+
+
+
+/* Insertar un numero entre 1 y 9 en las variables de una lista
+DOM: lista con variables (LIST) X variable lista salida (var)
+REC: lista completa de numeros (LIST) */
+insertarNum([X|COLA1],[Y|COLA2]):- var(X), % verificamos que es variable
+    between(1,9,Y), % Unifica la var Y con un numero entre 1 y 9
+    insertarNum(COLA1,COLA2).
+insertarNum([X|COLA1],[X|COLA2]):- number(X), %verificamos que es numero
+    insertarNum(COLA1,COLA2).
+insertarNum([],[]).
+
+
+
+%insertarNumSinRepeFILA(F,RESUL):-insertarNum(F,RESUL),horizontalCompleto(RESUL).
+/* Insertar numeros faltantes en todo las listas de la estructura del sudoku
+DOM: estructura Sudoku (Lista X Lista) X variable Sudoku salida (var)
+REC: estructura Sudoku (Lista X Lista) */
+todoInsertar([],[]).
+todoInsertar([CAB|COLA],[RE|COLA1]):-insertarNum(CAB,RE),horizontalCompleto(RE),todoInsertar(COLA,COLA1).
+
+resolver(SUDO,R1):-todoInsertar(SUDO,R1),todoVerticalCompleto(R1).
