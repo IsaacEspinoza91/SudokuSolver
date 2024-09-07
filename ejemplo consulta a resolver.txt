@@ -1,4 +1,4 @@
-resolver([
+insertarTodoCorrecto([
     [9, 2, 6, 3, 4, Q, 7, W, 1],
     [E, 5, R, T, 2, 6, 4, Y, 9],
     [U, 7, I, 8, O, 1, P, A, S],
@@ -8,3 +8,105 @@ resolver([
     [6, 8, 5, 4,TT,YY,UU, 1, 2],
     [II,OO,4,PP,AA, 2, 9,SS,DD],
     [FF,1,GG,5, 3, 8,HH, 7, JJ]],RESULTADO).
+
+
+
+/* Verificar que todo una fila (horizontal) tenga numeros sin repetir
+DOM: lista (LIST)
+REC: bool */
+horizontalCompleto(LIST):-
+    verificarUnicoNum(LIST,1),verificarUnicoNum(LIST,2),verificarUnicoNum(LIST,3),
+    verificarUnicoNum(LIST,4),verificarUnicoNum(LIST,5),verificarUnicoNum(LIST,6),
+    verificarUnicoNum(LIST,7),verificarUnicoNum(LIST,8),verificarUnicoNum(LIST,9).
+
+/* Verificar que todas las fila (horizontal) de una estructura Sudoku tenga numeros sin repetir
+DOM: estructura Sudoku (Lista X Lista)
+REC: bool */
+todoHorizontalCompleto([]).
+todoHorizontalCompleto([CAB_Sudoku|COLA]):-horizontalCompleto(CAB_Sudoku),todoHorizontalCompleto(COLA).
+
+
+/* Verificacion de que una lista tenga una sola vez un numero N ingresado
+DOM: lista (LIST) X n (num)
+REC: bool */
+verificarUnicoNum(Lista,N):-verificarUnicoNum(Lista,N,false).
+verificarUnicoNum([],_,true).
+verificarUnicoNum([X|COLA],N,Existe):- X==N, Existe==false ,verificarUnicoNum(COLA,N,true),!.
+verificarUnicoNum([X|_],N,Existe):- X==N, Existe==true,false,!.
+verificarUnicoNum([X|COLA],N,Existe):- X\=N, verificarUnicoNum(COLA,N,Existe).
+
+
+
+
+/* Verificacion de que todas las columnas (verticales) de una estructura Sudoku tengan numeros sin repetidos
+DOM: estructura Sudoku (Lista X Lista)
+REC: bool */
+todoVerticalCompleto([[],[],[],[],[],[],[],[],[]]).
+todoVerticalCompleto([[C1|COLA1],[C2|COLA2],[C3|COLA3],[C4|COLA4],[C5|COLA5],[C6|COLA6],[C7|COLA7],[C8|COLA8],[C9|COLA9]]):-
+    horizontalCompleto([C1,C2,C3,C4,C5,C6,C7,C8,C9]),
+    todoVerticalCompleto([COLA1,COLA2,COLA3,COLA4,COLA5,COLA6,COLA7,COLA8,COLA9]).
+
+
+
+/* Verificacion sudoku correctamente resuelto
+DOM: estructura Sudoku (Lista X Lista)
+REC: bool */
+sudokuResuelto(SUDO):-todoHorizontalCompleto(SUDO),todoVerticalCompleto(SUDO).
+
+
+verificar3CuadrantesValidos([],[],[]).
+verificar3CuadrantesValidos([F1a,F1b,F1c|COLA1],[F2a,F2b,F2c|COLA2],[F3a,F3b,F3c|COLA3]):-
+    horizontalCompleto([F1a,F1b,F1c,F2a,F2b,F2c,F3a,F3b,F3c]),verificar3CuadrantesValidos(COLA1,COLA2,COLA3).
+
+verificar3CuadrantesValidos([[],[],[]]).
+verificar3CuadrantesValidos([[F1a,F1b,F1c|COLA1],[F2a,F2b,F2c|COLA2],[F3a,F3b,F3c|COLA3]]):-
+    horizontalCompleto([F1a,F1b,F1c,F2a,F2b,F2c,F3a,F3b,F3c]),verificar3CuadrantesValidos([COLA1,COLA2,COLA3]).
+
+insertarPrimerTercioCorrecto([F1,F2,F3],[F1resul,F2resul,F3resul]):-
+    insertarNum(F1,F1resul),horizontalCompleto(F1resul),
+    insertarNum(F2,F2resul),horizontalCompleto(F2resul),
+    insertarNum(F3,F3resul),horizontalCompleto(F3resul),
+    verificar3CuadrantesValidos(F1resul,F2resul,F3resul).
+
+
+insertarTodoCorrecto([F1,F2,F3,F4,F5,F6,F7,F8,F9],
+                     [F1r,F2r,F3r,F4r,F5r,F6r,F7r,F8r,F9r]):-
+    insertarNum(F1,F1r),horizontalCompleto(F1r),
+    insertarNum(F2,F2r),horizontalCompleto(F2r),
+    insertarNum(F3,F3r),horizontalCompleto(F3r),verificar3CuadrantesValidos(F1r,F2r,F3r),
+    insertarNum(F4,F4r),horizontalCompleto(F4r),
+    insertarNum(F5,F5r),horizontalCompleto(F5r),
+    insertarNum(F6,F6r),horizontalCompleto(F6r),verificar3CuadrantesValidos(F4r,F5r,F6r),
+    insertarNum(F7,F7r),horizontalCompleto(F7r),
+    insertarNum(F8,F8r),horizontalCompleto(F8r),
+    insertarNum(F9,F9r),horizontalCompleto(F9r),verificar3CuadrantesValidos(F7r,F8r,F9r)
+    .
+
+
+contador([],0).
+contador([_|COLA],TOTAL):-contador(COLA,TOT1),TOTAL is 1+TOT1.
+myLength1(LISTA,RESUL):-myLength1(LISTA, 0,RESUL),!.
+myLength1([],ACUM,ACUM).
+myLength1([_|COLA],ACUM,TOTAL):-ACUM1 is ACUM+1,myLength1(COLA,ACUM1,TOTAL).
+
+
+/* Insertar un numero entre 1 y 9 en las variables de una lista
+DOM: lista con variables (LIST) X variable lista salida (var)
+REC: lista completa de numeros (LIST) */
+insertarNum([X|COLA1],[Y|COLA2]):- var(X), % verificamos que es variable
+    between(1,9,Y), % Unifica la var Y con un numero entre 1 y 9
+    insertarNum(COLA1,COLA2).
+insertarNum([X|COLA1],[X|COLA2]):- number(X), %verificamos que es numero
+    insertarNum(COLA1,COLA2).
+insertarNum([],[]).
+
+
+
+%insertarNumSinRepeFILA(F,RESUL):-insertarNum(F,RESUL),horizontalCompleto(RESUL).
+/* Insertar numeros faltantes en todo las listas de la estructura del sudoku
+DOM: estructura Sudoku (Lista X Lista) X variable Sudoku salida (var)
+REC: estructura Sudoku (Lista X Lista) */
+todoInsertar([],[]).
+todoInsertar([CAB|COLA],[RE|COLA1]):-insertarNum(CAB,RE),horizontalCompleto(RE),todoInsertar(COLA,COLA1).
+
+resolver(SUDO,R1):-todoInsertar(SUDO,R1),todoVerticalCompleto(R1).
